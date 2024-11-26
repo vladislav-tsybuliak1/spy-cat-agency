@@ -10,7 +10,8 @@ from core.serializers import (
     SpyCatCreateSerializer,
     SpyCatUpdateSalarySerializer,
     MissionSerializer,
-    MissionListRetrieveSerializer,
+    MissionListSerializer,
+    MissionRetrieveSerializer,
 )
 
 
@@ -54,14 +55,20 @@ class MissionViewSet(viewsets.ModelViewSet):
     serializer_class = MissionSerializer
 
     def get_serializer_class(self) -> type[MissionSerializer]:
-        if self.action in ["list", "retrieve"]:
-            return MissionListRetrieveSerializer
+        if self.action == "list":
+            return MissionListSerializer
+        if self.action == "retrieve":
+            return MissionRetrieveSerializer
         return self.serializer_class
 
     def get_queryset(self) -> QuerySet:
         queryset = super().get_queryset()
-        if self.action in ["list", "retrieve"]:
+        if self.action == "list":
             queryset = queryset.prefetch_related("targets")
+        if self.action == "retrieve":
+            queryset = queryset.prefetch_related("targets").select_related(
+                "assigned_cat"
+            )
         return queryset
 
     def destroy(self, request: Request, *args, **kwargs) -> Response:
