@@ -12,6 +12,7 @@ from core.serializers import (
     MissionSerializer,
     MissionListSerializer,
     MissionRetrieveSerializer,
+    AssignCatSerializer,
 )
 
 
@@ -80,3 +81,33 @@ class MissionViewSet(viewsets.ModelViewSet):
             )
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(
+        methods=["POST"],
+        detail=True,
+        url_path="assign-cat",
+    )
+    def assign_cat(self, request: Request, pk: int | None = None) -> Response:
+        mission = self.get_object()
+
+        if mission.assigned_cat:
+            return Response(
+                {"detail": "This mission has already an assigned cat"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        serializer = AssignCatSerializer(mission, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+
+        assigned_cat = serializer.validated_data.get("assigned_cat")
+        if Mission.objects.filter(
+            assigned_cat=assigned_cat, is_complete=False
+        ).exists():
+            return Response(
+                {"detail": "This cat is already assigned to an active mission."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        serializer.save()
+
+        return Response(MissionSerializer(mission).data)

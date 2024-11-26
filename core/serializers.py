@@ -70,3 +70,9 @@ class MissionListSerializer(MissionSerializer):
 class MissionRetrieveSerializer(MissionSerializer):
     targets = TargetSerializer(many=True, read_only=True)
     assigned_cat = SpyCatSerializer()
+
+
+class AssignCatSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Mission
+        fields = ("assigned_cat",)
