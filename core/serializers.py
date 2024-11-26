@@ -3,6 +3,7 @@ from rest_framework.exceptions import ValidationError
 
 from core.models import (
     SpyCat,
+    Target,
 )
 
 
@@ -26,3 +27,9 @@ class SpyCatUpdateSalarySerializer(serializers.ModelSerializer):
     class Meta:
         model = SpyCat
         fields = ("salary",)
+
+
+class TargetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Target
+        fields = ("id", "name", "country", "notes", "is_complete")

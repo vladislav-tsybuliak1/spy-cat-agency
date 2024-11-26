@@ -55,7 +55,7 @@ class Mission(models.Model):
 
 class Target(models.Model):
     mission = models.ForeignKey(
-        Mission,
+        to=Mission,
         on_delete=models.CASCADE,
         related_name="targets",
     )
