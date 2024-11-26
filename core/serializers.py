@@ -1,3 +1,4 @@
+from django.db import transaction
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
@@ -46,3 +47,11 @@ class MissionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Mission
         fields = ("id", "assigned_cat", "is_complete", "targets")
+
+    def create(self, validated_data: dict) -> Mission:
+        with transaction.atomic():
+            targets_data = validated_data.pop("targets")
+            mission = Mission.objects.create(**validated_data)
+            for target_data in targets_data:
+                Target.objects.create(mission=mission, **target_data)
+            return mission
