@@ -3,11 +3,12 @@ from rest_framework.decorators import action
 from rest_framework.request import Request
 from rest_framework.response import Response
 
-from core.models import SpyCat
+from core.models import SpyCat, Mission
 from core.serializers import (
     SpyCatSerializer,
     SpyCatCreateSerializer,
     SpyCatUpdateSalarySerializer,
+    MissionSerializer,
 )
 
 
@@ -44,3 +45,8 @@ class SpyCatViewSet(
             SpyCatSerializer(spy_cat).data,
             status=status.HTTP_200_OK,
         )
+
+
+class MissionViewSet(viewsets.ModelViewSet):
+    queryset = Mission.objects.all()
+    serializer_class = MissionSerializer
