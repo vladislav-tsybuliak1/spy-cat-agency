@@ -13,6 +13,7 @@ from core.serializers import (
     MissionListSerializer,
     MissionRetrieveSerializer,
     AssignCatSerializer,
+    MissionUpdateSerializer,
 )
 
 
@@ -47,21 +48,17 @@ class SpyCatViewSet(
         )
 
 
-class MissionViewSet(
-    mixins.ListModelMixin,
-    mixins.RetrieveModelMixin,
-    mixins.DestroyModelMixin,
-    mixins.CreateModelMixin,
-    viewsets.GenericViewSet,
-):
+class MissionViewSet(viewsets.ModelViewSet):
     queryset = Mission.objects.all()
     serializer_class = MissionSerializer
 
-    def get_serializer_class(self) -> type[MissionSerializer]:
+    def get_serializer_class(self) -> type[MissionSerializer | MissionUpdateSerializer]:
         if self.action == "list":
             return MissionListSerializer
         if self.action == "retrieve":
             return MissionRetrieveSerializer
+        if self.action in ["update", "partial_update"]:
+            return MissionUpdateSerializer
         return self.serializer_class
 
     def get_queryset(self) -> QuerySet:
