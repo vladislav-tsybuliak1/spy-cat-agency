@@ -20,3 +20,9 @@ class SpyCatCreateSerializer(SpyCatSerializer):
             error_to_raise=ValidationError,
         )
         return data
+
+
+class SpyCatUpdateSalarySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SpyCat
+        fields = ("salary",)
