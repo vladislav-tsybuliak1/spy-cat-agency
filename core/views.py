@@ -31,11 +31,7 @@ class SpyCatViewSet(
             return SpyCatCreateSerializer
         return self.serializer_class
 
-    @action(
-        methods=["PATCH"],
-        detail=True,
-        url_path="update-salary",
-    )
+    @action(methods=["PATCH"], detail=True, url_path="update-salary")
     def update_salary(self, request: Request, pk: int | None = None) -> Response:
         spy_cat = self.get_object()
         serializer = SpyCatUpdateSalarySerializer(
@@ -82,11 +78,7 @@ class MissionViewSet(viewsets.ModelViewSet):
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @action(
-        methods=["POST"],
-        detail=True,
-        url_path="assign-cat",
-    )
+    @action(methods=["POST"], detail=True, url_path="assign-cat")
     def assign_cat(self, request: Request, pk: int | None = None) -> Response:
         mission = self.get_object()
 
