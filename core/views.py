@@ -50,3 +50,13 @@ class SpyCatViewSet(
 class MissionViewSet(viewsets.ModelViewSet):
     queryset = Mission.objects.all()
     serializer_class = MissionSerializer
+
+    def destroy(self, request: Request, *args, **kwargs) -> Response:
+        instance = self.get_object()
+        if instance.assigned_cat:
+            return Response(
+                {"detail": "Cannot delete a mission that is assigned to a cat."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
