@@ -1,3 +1,4 @@
+from django.db.models import QuerySet
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action
 from rest_framework.request import Request
@@ -8,7 +9,8 @@ from core.serializers import (
     SpyCatSerializer,
     SpyCatCreateSerializer,
     SpyCatUpdateSalarySerializer,
-    MissionSerializer, MissionListRetrieveSerializer,
+    MissionSerializer,
+    MissionListRetrieveSerializer,
 )
 
 
@@ -56,6 +58,11 @@ class MissionViewSet(viewsets.ModelViewSet):
             return MissionListRetrieveSerializer
         return self.serializer_class
 
+    def get_queryset(self) -> QuerySet:
+        queryset = super().get_queryset()
+        if self.action in ["list", "retrieve"]:
+            queryset = queryset.prefetch_related("targets")
+        return queryset
 
     def destroy(self, request: Request, *args, **kwargs) -> Response:
         instance = self.get_object()
