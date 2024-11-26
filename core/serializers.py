@@ -55,3 +55,7 @@ class MissionSerializer(serializers.ModelSerializer):
             for target_data in targets_data:
                 Target.objects.create(mission=mission, **target_data)
             return mission
+
+
+class MissionListRetrieveSerializer(MissionSerializer):
+    targets = TargetSerializer(many=True, read_only=True)
