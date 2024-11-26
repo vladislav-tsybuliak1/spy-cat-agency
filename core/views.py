@@ -47,7 +47,13 @@ class SpyCatViewSet(
         )
 
 
-class MissionViewSet(viewsets.ModelViewSet):
+class MissionViewSet(
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.DestroyModelMixin,
+    mixins.CreateModelMixin,
+    viewsets.ModelViewSet,
+):
     queryset = Mission.objects.all()
     serializer_class = MissionSerializer
 
