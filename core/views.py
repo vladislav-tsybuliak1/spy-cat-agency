@@ -13,6 +13,7 @@ from core.serializers import (
     MissionListSerializer,
     MissionRetrieveSerializer,
     AssignCatSerializer,
+    MissionUpdateSerializer,
 )
 
 
@@ -31,7 +32,7 @@ class SpyCatViewSet(
             return SpyCatCreateSerializer
         return self.serializer_class
 
-    @action(methods=["PATCH"], detail=True, url_path="update-salary")
+    @action(methods=["PUT", "PATCH"], detail=True, url_path="update-salary")
     def update_salary(self, request: Request, pk: int | None = None) -> Response:
         spy_cat = self.get_object()
         serializer = SpyCatUpdateSalarySerializer(
@@ -52,7 +53,7 @@ class MissionViewSet(
     mixins.RetrieveModelMixin,
     mixins.DestroyModelMixin,
     mixins.CreateModelMixin,
-    viewsets.ModelViewSet,
+    viewsets.GenericViewSet,
 ):
     queryset = Mission.objects.all()
     serializer_class = MissionSerializer
