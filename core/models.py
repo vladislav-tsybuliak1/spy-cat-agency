@@ -23,3 +23,18 @@ class Mission(models.Model):
 
     def __str__(self) -> str:
         return f"Mission {self.pk} (Completed: {self.is_complete})"
+
+
+class Target(models.Model):
+    mission = models.ForeignKey(
+        Mission,
+        on_delete=models.CASCADE,
+        related_name="targets",
+    )
+    name = models.CharField(max_length=255)
+    country = models.CharField(max_length=63)
+    notes = models.TextField(null=True, blank=True)
+    is_complete = models.BooleanField(default=False)
+
+    def __str__(self) -> str:
+        return str(self.name)
