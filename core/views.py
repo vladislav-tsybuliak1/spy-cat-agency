@@ -12,8 +12,7 @@ from core.serializers import (
     MissionSerializer,
     MissionListSerializer,
     MissionRetrieveSerializer,
-    AssignCatSerializer,
-    MissionUpdateSerializer,
+    AssignCatSerializer
 )
 
 
