@@ -51,6 +51,12 @@ class MissionSerializer(serializers.ModelSerializer):
     def create(self, validated_data: dict) -> Mission:
         with transaction.atomic():
             targets_data = validated_data.pop("targets")
+            if len(targets_data) > 3:
+                raise ValidationError(
+                    {
+                        "detail": "The amount of targets for one mission should be less than 3!"
+                    }
+                )
             mission = Mission.objects.create(**validated_data)
             for target_data in targets_data:
                 Target.objects.create(mission=mission, **target_data)
